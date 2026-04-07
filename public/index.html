@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-Hotels</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>e-Hotels</h1>
+
+  <!-- Role selector -->
+  <div id="role-bar">
+    <label>Role:
+      <select id="role-select">
+        <option value="customer">Customer</option>
+        <option value="employee">Employee</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- Tab navigation -->
+  <nav id="tabs">
+    <button class="tab active" data-tab="search">Search Rooms</button>
+    <button class="tab" data-tab="bookings">Bookings</button>
+    <button class="tab" data-tab="rentings">Rentings</button>
+    <button class="tab" data-tab="payments">Payments</button>
+    <button class="tab" data-tab="customers">Customers</button>
+    <button class="tab" data-tab="employees">Employees</button>
+    <button class="tab" data-tab="hotels">Hotels</button>
+    <button class="tab" data-tab="rooms">Rooms</button>
+    <button class="tab" data-tab="chains">Hotel Chains</button>
+    <button class="tab" data-tab="views">SQL Views</button>
+    <button class="tab" data-tab="archives">Archives</button>
+  </nav>
+
+  <!-- ==================== SEARCH TAB ==================== -->
+  <div id="tab-search" class="tab-content active">
+    <h2>Search Available Rooms</h2>
+    <form id="search-form">
+      <label>Start Date <input type="date" name="startDate" required></label>
+      <label>End Date <input type="date" name="endDate" required></label>
+      <label>Min Capacity <input type="number" name="capacity" min="1" placeholder="Any"></label>
+      <label>Area <select name="city"><option value="">Any</option></select></label>
+      <label>Hotel Chain <select name="chainId"><option value="">Any</option></select></label>
+      <label>Stars <select name="stars">
+        <option value="">Any</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+      </select></label>
+      <label>Max Price <input type="number" name="maxPrice" min="0" step="0.01" placeholder="Any"></label>
+      <label>Min Hotel Rooms <input type="number" name="minRooms" min="1" placeholder="Any"></label>
+      <button type="submit">Search</button>
+    </form>
+    <table id="search-results">
+      <thead><tr>
+        <th>Room ID</th><th>Chain</th><th>Hotel Address</th><th>City</th><th>Stars</th>
+        <th>Capacity</th><th>Price</th><th>View</th><th>Extendable</th><th>Amenities</th><th>Action</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== BOOKINGS TAB ==================== -->
+  <div id="tab-bookings" class="tab-content">
+    <h2>Active Bookings</h2>
+    <table id="bookings-table">
+      <thead><tr>
+        <th>ID</th><th>Customer</th><th>Chain</th><th>Hotel</th><th>City</th>
+        <th>Room</th><th>Capacity</th><th>Start</th><th>End</th><th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== RENTINGS TAB ==================== -->
+  <div id="tab-rentings" class="tab-content">
+    <h2>Active Rentings</h2>
+
+    <h3>Create Direct Renting (Employee only)</h3>
+    <form id="renting-form">
+      <label>Customer <select name="customer_id" required></select></label>
+      <label>Room ID <input type="number" name="room_id" required></label>
+      <label>Employee <select name="employee_id" required></select></label>
+      <label>Start Date <input type="date" name="start_date" required></label>
+      <label>End Date <input type="date" name="end_date" required></label>
+      <button type="submit">Create Renting</button>
+    </form>
+
+    <table id="rentings-table">
+      <thead><tr>
+        <th>ID</th><th>Customer</th><th>Employee</th><th>Chain</th><th>Hotel</th>
+        <th>Room</th><th>Start</th><th>End</th><th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== PAYMENTS TAB ==================== -->
+  <div id="tab-payments" class="tab-content">
+    <h2>Payments</h2>
+    <h3>Record Payment (Employee only)</h3>
+    <form id="payment-form">
+      <label>Renting ID <input type="number" name="renting_id" required></label>
+      <label>Amount ($) <input type="number" name="amount" min="0.01" step="0.01" required></label>
+      <button type="submit">Record Payment</button>
+    </form>
+    <table id="payments-table">
+      <thead><tr>
+        <th>ID</th><th>Renting ID</th><th>Customer</th><th>Amount</th><th>Date</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== CUSTOMERS TAB ==================== -->
+  <div id="tab-customers" class="tab-content">
+    <h2>Customers</h2>
+    <form id="customer-form">
+      <input type="hidden" name="customer_id">
+      <label>Full Name <input type="text" name="full_name" required></label>
+      <label>Address <input type="text" name="address" required></label>
+      <label>ID Type <select name="id_type" required>
+        <option value="SSN">SSN</option>
+        <option value="SIN">SIN</option>
+        <option value="Driving Licence">Driving Licence</option>
+      </select></label>
+      <label>ID Number <input type="text" name="id_number" required></label>
+      <button type="submit">Save</button>
+      <button type="button" onclick="resetForm('customer-form')">Clear</button>
+    </form>
+    <table id="customers-table">
+      <thead><tr>
+        <th>ID</th><th>Name</th><th>Address</th><th>ID Type</th><th>ID Number</th><th>Registered</th><th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== EMPLOYEES TAB ==================== -->
+  <div id="tab-employees" class="tab-content">
+    <h2>Employees</h2>
+    <form id="employee-form">
+      <input type="hidden" name="employee_id">
+      <label>Full Name <input type="text" name="full_name" required></label>
+      <label>Address <input type="text" name="address" required></label>
+      <label>SSN <input type="text" name="ssn" required></label>
+      <label>Hotel <select name="hotel_id" required></select></label>
+      <label>Role <input type="text" name="role" required placeholder="e.g. Manager, Receptionist"></label>
+      <button type="submit">Save</button>
+      <button type="button" onclick="resetForm('employee-form')">Clear</button>
+    </form>
+    <table id="employees-table">
+      <thead><tr>
+        <th>ID</th><th>Name</th><th>Address</th><th>SSN</th><th>Hotel</th><th>Role</th><th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== HOTELS TAB ==================== -->
+  <div id="tab-hotels" class="tab-content">
+    <h2>Hotels</h2>
+    <form id="hotel-form">
+      <input type="hidden" name="hotel_id">
+      <label>Chain <select name="chain_id" required></select></label>
+      <label>Address <input type="text" name="address" required></label>
+      <label>City <input type="text" name="city" required></label>
+      <label>Stars <select name="stars" required>
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+      </select></label>
+      <button type="submit">Save</button>
+      <button type="button" onclick="resetForm('hotel-form')">Clear</button>
+    </form>
+    <table id="hotels-table">
+      <thead><tr>
+        <th>ID</th><th>Chain</th><th>Address</th><th>City</th><th>Stars</th><th>Rooms</th><th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== ROOMS TAB ==================== -->
+  <div id="tab-rooms" class="tab-content">
+    <h2>Rooms</h2>
+    <form id="room-form">
+      <input type="hidden" name="room_id">
+      <label>Hotel <select name="hotel_id" required></select></label>
+      <label>Price <input type="number" name="price" min="0" step="0.01" required></label>
+      <label>Capacity <input type="number" name="capacity" min="1" required></label>
+      <label>Extendable By <input type="number" name="extendable_by" min="0" value="0"></label>
+      <label>View <select name="view_type">
+        <option value="none">None</option>
+        <option value="sea">Sea</option>
+        <option value="mountain">Mountain</option>
+      </select></label>
+      <button type="submit">Save</button>
+      <button type="button" onclick="resetForm('room-form')">Clear</button>
+    </form>
+    <table id="rooms-table">
+      <thead><tr>
+        <th>ID</th><th>Hotel</th><th>City</th><th>Price</th><th>Capacity</th>
+        <th>Extend</th><th>View</th><th>Available</th><th>Amenities</th><th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== CHAINS TAB ==================== -->
+  <div id="tab-chains" class="tab-content">
+    <h2>Hotel Chains</h2>
+    <form id="chain-form">
+      <input type="hidden" name="chain_id">
+      <label>Name <input type="text" name="name" required></label>
+      <label>HQ Address <input type="text" name="address" required></label>
+      <button type="submit">Save</button>
+      <button type="button" onclick="resetForm('chain-form')">Clear</button>
+    </form>
+    <table id="chains-table">
+      <thead><tr>
+        <th>ID</th><th>Name</th><th>HQ Address</th><th>Hotels</th><th>Emails</th><th>Phones</th><th>Actions</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== VIEWS TAB ==================== -->
+  <div id="tab-views" class="tab-content">
+    <h2>SQL Views</h2>
+
+    <h3>View 1: Available Rooms per Area</h3>
+    <table id="view1-table">
+      <thead><tr><th>Area</th><th>Available Rooms</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <h3>View 2: Aggregated Capacity per Hotel</h3>
+    <table id="view2-table">
+      <thead><tr>
+        <th>Chain</th><th>Hotel Address</th><th>City</th><th>Stars</th><th>Total Rooms</th><th>Total Capacity</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- ==================== ARCHIVES TAB ==================== -->
+  <div id="tab-archives" class="tab-content">
+    <h2>Archives</h2>
+
+    <h3>Booking Archives</h3>
+    <table id="booking-archives-table">
+      <thead><tr>
+        <th>Archive ID</th><th>Booking ID</th><th>Customer</th><th>Room</th>
+        <th>Hotel</th><th>Chain</th><th>Start</th><th>End</th><th>Archived</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <h3>Renting Archives</h3>
+    <table id="renting-archives-table">
+      <thead><tr>
+        <th>Archive ID</th><th>Renting ID</th><th>Customer</th><th>Room</th>
+        <th>Hotel</th><th>Chain</th><th>Employee</th><th>Start</th><th>End</th><th>Archived</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
