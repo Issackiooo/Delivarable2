@@ -1,0 +1,111 @@
+relational model
+
+HotelChain (name, address,numHotels()
+Pkunique name/address combination
+numHotels() derived off number of hotels with FK referencing this HotelChain
+
+
+
+HC_phones(hc_name,hc_address,phone_num)
+HC_phones(hc_name,hc_address,email)
+FK hc_name references HotelChain.name
+FK hc_address references Hotelhain.address
+PK unique combination of FK with attribute (email or phone num)
+
+Hotel(kc_name,hc_address,address, stars)
+FK hc_name references HotelChain.name
+FK hc_address references Hotelhain.address
+PKunique combination of FKs and address
+stars of type int range [1,5]
+Hotel must be created alongside an initial HotelManager (fails otherwise)
+
+H_phones(h_name,h_address,phone_num)
+H_phones(h_name,h_address,email)
+FK h_name references Hotel.name
+FK h_address references Hotel.address
+PK unique combination of FKs with attribute (email or phone num)
+
+
+Room(ID, h_address, hc_address, hc_name, price, extendableBy, view,isAvailable,capacity)
+
+FK hc_name references HotelChain.name
+FK hc_address references Hotelhain.address
+FK h_address references Hotel.address
+PK unique combination of all Fks with ID
+
+price float >= 0.00
+capacity int >= 1
+extendableBy int O by default
+view string either {"sea","mountain", "none"}
+isAvailable bool derived from if there's an ongoing Reservation for this room.
+
+
+RoomAmenity(r_id, h_addr, hc_addr, hc_name, amenity_desc)
+FKs: {
+    r_id from Room.ID,
+    h_addr from Hotel.address
+    hc_addr from HotelChain.address,
+    hc_name from HotelChain.name
+}
+PK unique combination of all FK amenity_desc
+amenity_desc of type string
+
+
+RoomProblem(r_id,h_addr,hc_addr,hc_name,problem_desc)
+FKs: {
+    r_id from Room.ID,
+    h_addr from Hotel.address
+    hc_addr from HotelChain.address,
+    hc_name from HotelChain.name
+}
+problem_desc of type string
+
+Customer(fullname, address, registr_date)
+PK unique fullname and address combination
+
+Employe(SIN,fullname,address)
+PK unique SIN
+
+EmployeeRole(e_sin,role_name)
+FK e_sin references Employee.SIN
+PK unique combination of FK and role_name
+role_name of type string and is mandatory
+
+HotelManager(e_sin, h_addr, hc_name, hc_addr)
+FK e_sin to Employee.SIN
+FK h_addr to Hotel.address
+FK h_adder to HotelChain.address
+FK hc_name to HotelChain.name
+PK unique combination of all FK
+creation of HotelManager will fail if no EmployeeRole corresponding to current employee with role_name containing the substring "manager" (ex: "regional manager" is valid)
+
+Booking(ID, startDate, endDate,
+r_id, h_addr, hc_addr, hc_name, c_name, c_addr, created_by) //this full line is optional FK
+PK is unique ID (for archiving) 
+FKs {
+    r_id from Room.ID,
+    h_addr from Hotel.address,
+    hc_addr From HotelChain,
+    hc_name from HotelChain.name,
+    c_name from Customer.name,
+    c_addr from Customer.address,
+    created_by from Employee.SIN
+}
+StartDate < endDate 
+Booking creation fails if target Room.isAvailable == false
+
+
+Renting(ID, startDate, endDate, isPaid,
+r_id, h_addr, hc_addr. hc_name, c_name, c_addr, created_by) //this full line is optional FK
+PK is unique ID (for archiving)
+FKs {
+    r_id from Room ID,
+    h_addr from Hotel.address,
+    hc_addr from HotelChain.address,
+    hc_name from HotelChain.name,
+    c_name From customer.name,
+    c_addr from customer.address,
+    created_by from Employee.SIN
+}
+startDate < endDate
+Renting creation fails if target Room.isAvailable == False
