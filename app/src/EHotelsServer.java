@@ -112,11 +112,6 @@ public class EHotelsServer {
             </div>
             <div class="grid">
               <section class="panel">
-                <h2>Project Coverage</h2>
-                <p>This app exposes the customer search-and-book flow, the employee check-in and direct-renting flow, CRUD screens for customers, employees, hotels, and rooms, and in-app display of the required SQL views and sample queries.</p>
-                <p>Use <code>scripts/setup_db.sh</code> to rebuild the database and <code>scripts/run_queries.sh</code> or <code>scripts/run_modifications.sh</code> for the deliverable demos.</p>
-              </section>
-              <section class="panel">
                 <h2>Quick Links</h2>
                 <div class="stack">
                   <a href="/search">Search available rooms and create a booking or direct renting</a>
@@ -904,16 +899,26 @@ public class EHotelsServer {
         if (bookings.rows().isEmpty()) {
             bookingHtml.append("<p class=\"hint\">There are no active bookings to convert.</p>");
         } else {
-            bookingHtml.append("<table><thead><tr><th>Booking</th><th>Customer</th><th>Room</th><th>Dates</th><th>Action</th></tr></thead><tbody>");
+            bookingHtml.append("<div class=\"table-wrap ops-wrap\"><table class=\"ops-table\"><thead><tr><th>Booking</th><th>Customer</th><th>Room</th><th>Dates</th><th>Action</th></tr></thead><tbody>");
             for (Map<String, String> row : bookings.rows()) {
                 bookingHtml.append("<tr>")
                     .append("<td>").append(Html.escape(row.get("id"))).append("</td>")
                     .append("<td>").append(Html.escape(row.get("c_name"))).append("</td>")
-                    .append("<td>").append(Html.escape(row.get("hc_name"))).append(" / ").append(Html.escape(row.get("h_addr"))).append(" / #").append(Html.escape(row.get("r_id"))).append("</td>")
-                    .append("<td>").append(Html.escape(row.get("start_date"))).append(" to ").append(Html.escape(row.get("end_date"))).append("</td>")
-                    .append("<td>")
+                    .append("<td><div class=\"cell-stack\"><strong>")
+                    .append(Html.escape(row.get("hc_name")))
+                    .append("</strong><span>")
+                    .append(Html.escape(row.get("h_addr")))
+                    .append("</span><span>Room #")
+                    .append(Html.escape(row.get("r_id")))
+                    .append("</span></div></td>")
+                    .append("<td><div class=\"cell-stack\"><span>")
+                    .append(Html.escape(row.get("start_date")))
+                    .append("</span><span>to</span><span>")
+                    .append(Html.escape(row.get("end_date")))
+                    .append("</span></div></td>")
+                    .append("<td class=\"action-cell\">")
                     .append("""
-                        <form class="inline-form" method="post" action="/actions/convert-booking">
+                        <form class="inline-form action-form" method="post" action="/actions/convert-booking">
                           %s
                           %s
                           <label>Employee
@@ -935,29 +940,43 @@ public class EHotelsServer {
                         </form>
                         """.formatted(
                         Html.hidden("redirect", "/operations"),
-                        Html.hidden("bookingId", row.get("id")),
-                        Html.options(employeeOptions.rows(), "employee_key", "label", "", false)
-                    ))
-                    .append("</td></tr>");
+                          Html.hidden("bookingId", row.get("id")),
+                          Html.options(employeeOptions.rows(), "employee_key", "label", "", false)
+                      ))
+                      .append("</td></tr>");
             }
-            bookingHtml.append("</tbody></table>");
+            bookingHtml.append("</tbody></table></div>");
         }
 
         StringBuilder rentingHtml = new StringBuilder();
         if (rentings.rows().isEmpty()) {
             rentingHtml.append("<p class=\"hint\">There are no active rentings.</p>");
         } else {
-            rentingHtml.append("<table><thead><tr><th>Renting</th><th>Customer</th><th>Room</th><th>Dates</th><th>Paid</th><th>Action</th></tr></thead><tbody>");
+            rentingHtml.append("<div class=\"table-wrap ops-wrap\"><table class=\"ops-table\"><thead><tr><th>Renting</th><th>Customer</th><th>Room</th><th>Dates</th><th>Paid</th><th>Action</th></tr></thead><tbody>");
             for (Map<String, String> row : rentings.rows()) {
                 rentingHtml.append("<tr>")
                     .append("<td>").append(Html.escape(row.get("id"))).append("</td>")
                     .append("<td>").append(Html.escape(row.get("c_name"))).append("</td>")
-                    .append("<td>").append(Html.escape(row.get("hc_name"))).append(" / ").append(Html.escape(row.get("h_addr"))).append(" / #").append(Html.escape(row.get("r_id"))).append("</td>")
-                    .append("<td>").append(Html.escape(row.get("start_date"))).append(" to ").append(Html.escape(row.get("end_date"))).append("</td>")
-                    .append("<td>").append(Html.escape(row.get("paid_amount"))).append(" / paid flag: ").append(Html.escape(row.get("is_paid"))).append("</td>")
-                    .append("<td>")
+                    .append("<td><div class=\"cell-stack\"><strong>")
+                    .append(Html.escape(row.get("hc_name")))
+                    .append("</strong><span>")
+                    .append(Html.escape(row.get("h_addr")))
+                    .append("</span><span>Room #")
+                    .append(Html.escape(row.get("r_id")))
+                    .append("</span></div></td>")
+                    .append("<td><div class=\"cell-stack\"><span>")
+                    .append(Html.escape(row.get("start_date")))
+                    .append("</span><span>to</span><span>")
+                    .append(Html.escape(row.get("end_date")))
+                    .append("</span></div></td>")
+                    .append("<td><div class=\"cell-stack\"><span>")
+                    .append(Html.escape(row.get("paid_amount")))
+                    .append("</span><span>Paid flag: ")
+                    .append(Html.escape(row.get("is_paid")))
+                    .append("</span></div></td>")
+                    .append("<td class=\"action-cell\">")
                     .append("""
-                        <form class="inline-form" method="post" action="/actions/pay">
+                        <form class="inline-form action-form" method="post" action="/actions/pay">
                           %s
                           %s
                           <label>Amount<input name="amount" required></label>
@@ -965,24 +984,35 @@ public class EHotelsServer {
                           <button type="submit">Insert payment</button>
                         </form>
                         """.formatted(
-                        Html.hidden("redirect", "/operations"),
-                        Html.hidden("rentingId", row.get("id"))
-                    ))
-                    .append("</td></tr>");
+                          Html.hidden("redirect", "/operations"),
+                          Html.hidden("rentingId", row.get("id"))
+                      ))
+                      .append("</td></tr>");
             }
-            rentingHtml.append("</tbody></table>");
+            rentingHtml.append("</tbody></table></div>");
         }
 
         return """
             <div class="grid">
               <section class="panel">
-                <h2>Convert booking to renting</h2>
-                <p>The employee performing check-in is recorded as the creator of the renting.</p>
-                %s
-              </section>
-              <section class="panel">
-                <h2>Insert customer payment</h2>
-                %s
+                <div class="section-title">
+                  <h2>Operations</h2>
+                  <p class="hint">Check-ins and payments use the same clean layout as the search page.</p>
+                </div>
+                <div class="stack">
+                  <p class="hint">Use this page when a customer arrives with an existing booking and an employee needs to convert that booking into a renting.</p>
+                  <p class="hint">For walk-in customers without a booking, use <a href="/search?actor=employee">the employee search flow</a> to create a direct renting.</p>
+                  <div class="subpanel">
+                    <h3>Convert booking to renting</h3>
+                    <p class="hint">The employee performing check-in is recorded as the creator of the renting.</p>
+                    %s
+                  </div>
+                  <div class="subpanel">
+                    <h3>Insert customer payment</h3>
+                    <p class="hint">Add a payment to an active renting. This keeps the operations workflow separate from the room search page.</p>
+                    %s
+                  </div>
+                </div>
               </section>
             </div>
             """.formatted(bookingHtml, rentingHtml);

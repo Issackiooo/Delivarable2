@@ -140,6 +140,17 @@ public class Html {
                   flex-wrap: wrap;
                   align-items: center;
                 }
+                .inline-form > * {
+                  min-width: 0;
+                }
+                .inline-form label {
+                  flex: 1 1 11rem;
+                  min-width: min(11rem, 100%%);
+                }
+                .inline-form button {
+                  flex: 0 0 auto;
+                  align-self: end;
+                }
                 label {
                   display: grid;
                   gap: 0.35rem;
@@ -212,6 +223,34 @@ public class Html {
                   gap: 1rem;
                   align-items: baseline;
                 }
+                .subpanel {
+                  padding: 1rem;
+                  border: 1px solid #e2d6c5;
+                  border-radius: 14px;
+                  background: rgba(255, 255, 255, 0.75);
+                  min-width: 0;
+                }
+                .table-wrap.ops-wrap table {
+                  min-width: 980px;
+                }
+                .ops-table td,
+                .ops-table th {
+                  white-space: normal;
+                }
+                .cell-stack {
+                  display: grid;
+                  gap: 0.2rem;
+                  min-width: 0;
+                }
+                .action-cell {
+                  min-width: 20rem;
+                }
+                .action-form {
+                  align-items: stretch;
+                }
+                .action-form label {
+                  flex-basis: 10rem;
+                }
                 code {
                   background: #f6ead8;
                   padding: 0.1rem 0.3rem;
@@ -226,6 +265,12 @@ public class Html {
                     flex-direction: column;
                     align-items: stretch;
                   }
+                  .action-cell {
+                    min-width: 0;
+                  }
+                  .table-wrap.ops-wrap table {
+                    min-width: 720px;
+                  }
                 }
               </style>
             </head>
@@ -234,7 +279,6 @@ public class Html {
                 <div class="shell topbar">
                   <div>
                     <h1>e-Hotels Deliverable 2</h1>
-                    <p>Minimal PostgreSQL + Java implementation aligned to the submitted schema.</p>
                   </div>
                   <nav>
                     %s
