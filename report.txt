@@ -1,0 +1,129 @@
+e-Hotels Deliverable 2 Report
+
+1. DBMS and Programming Languages Used
+
+DBMS:
+- PostgreSQL
+
+Programming languages and technologies:
+- Java for the server-side application
+- HTML for the user interface
+- CSS for styling
+- Minimal JavaScript for client-side interactions
+- SQL for schema creation, constraints, triggers, views, indexes, queries, and seed data
+
+Database access:
+- The Java server invokes the local PostgreSQL command-line tool `psql`
+
+
+2. Specific Steps to Install and Run the Application
+
+Prerequisites:
+- PostgreSQL installed locally
+- `psql` available from the PostgreSQL installation
+- `javac` and `java` available in terminal
+- A running local PostgreSQL server
+
+The following commands were used on Windows PowerShell.
+
+Step 1: make PostgreSQL terminal tools available in the current PowerShell window
+
+$env:Path += ";C:\Program Files\PostgreSQL\18\bin"
+$env:PGUSER = "postgres"
+$env:PGPASSWORD = "YOUR_POSTGRES_PASSWORD"
+$env:PGHOST = "localhost"
+$env:PGPORT = "5432"
+
+Notes:
+- Replace `YOUR_POSTGRES_PASSWORD` with the actual password for your local PostgreSQL user
+- If your PostgreSQL username is not `postgres`, replace that value as well
+- If the PostgreSQL installation path or port is different on another machine, update those values
+
+Step 2: create the project database
+
+psql -d postgres -c "CREATE DATABASE ehotels_d2;"
+
+If the database already exists, PostgreSQL will report that and you can continue with the next commands.
+
+Step 3: load the database schema, indexes, views, and seed data
+
+psql -d ehotels_d2 -f sql\00_reset.sql
+psql -d ehotels_d2 -f sql\01_schema.sql
+psql -d ehotels_d2 -f sql\02_indexes_views.sql
+psql -d ehotels_d2 -f sql\03_seed.sql
+
+Step 4: compile and run the Java server
+
+javac app\src\*.java
+java -cp app\src EHotelsServer
+
+Step 5: open the application in the browser
+
+http://localhost:8080/dashboard
+
+Important:
+- The same PowerShell window should be used for the database setup and for running the Java server
+- This is necessary because the Java application also calls `psql` internally and depends on PostgreSQL being available in the terminal environment
+
+
+3. List of DDLs That Create the Database
+
+The SQL statements that create the database structure are contained in the following files:
+
+1. sql\00_reset.sql
+- Drops existing project objects so the database can be rebuilt cleanly
+- Includes DROP statements for project tables, views, triggers, and functions
+
+2. sql\01_schema.sql
+- CREATE TABLE statements for the core relations, including:
+  hotel_chain
+  hotel_chain_phone
+  hotel_chain_email
+  hotel
+  hotel_phone
+  hotel_email
+  room
+  room_amenity
+  room_problem
+  customer
+  employee
+  employee_role
+  hotel_manager
+  booking
+  renting
+  booking_archive
+  renting_archive
+  payment
+- ALTER TABLE and constraint definitions for:
+  primary keys
+  foreign keys
+  check constraints
+- CREATE FUNCTION statements for application and database logic
+- CREATE TRIGGER statements for user-defined constraints and archive behavior
+
+3. sql\02_indexes_views.sql
+- CREATE INDEX statements for performance support
+- CREATE VIEW statements for the required database views
+
+The remaining SQL files support other deliverable requirements:
+
+- sql\03_seed.sql
+  inserts the sample data used by the application
+- sql\04_queries.sql
+  contains the required demonstration queries
+- sql\05_modifications.sql
+  contains modification and trigger demonstration statements
+
+
+4. Project Files Included
+
+- sql\00_reset.sql
+- sql\01_schema.sql
+- sql\02_indexes_views.sql
+- sql\03_seed.sql
+- sql\04_queries.sql
+- sql\05_modifications.sql
+- app\src\Database.java
+- app\src\EHotelsServer.java
+- app\src\Html.java
+- report.txt
