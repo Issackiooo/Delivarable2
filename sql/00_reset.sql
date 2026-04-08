@@ -1,0 +1,38 @@
+DROP VIEW IF EXISTS available_rooms_per_area CASCADE;
+DROP VIEW IF EXISTS hotel_aggregated_capacity CASCADE;
+
+DROP TABLE IF EXISTS payment CASCADE;
+DROP TABLE IF EXISTS renting_archive CASCADE;
+DROP TABLE IF EXISTS booking_archive CASCADE;
+DROP TABLE IF EXISTS renting CASCADE;
+DROP TABLE IF EXISTS booking CASCADE;
+DROP TABLE IF EXISTS hotel_manager CASCADE;
+DROP TABLE IF EXISTS employee_role CASCADE;
+DROP TABLE IF EXISTS employee CASCADE;
+DROP TABLE IF EXISTS customer CASCADE;
+DROP TABLE IF EXISTS room_problem CASCADE;
+DROP TABLE IF EXISTS room_amenity CASCADE;
+DROP TABLE IF EXISTS room CASCADE;
+DROP TABLE IF EXISTS h_email CASCADE;
+DROP TABLE IF EXISTS h_phone CASCADE;
+DROP TABLE IF EXISTS hotel CASCADE;
+DROP TABLE IF EXISTS hc_email CASCADE;
+DROP TABLE IF EXISTS hc_phone CASCADE;
+DROP TABLE IF EXISTS hotel_chain CASCADE;
+
+DROP FUNCTION IF EXISTS hotel_area(text) CASCADE;
+DROP FUNCTION IF EXISTS sync_hotel_chain_num_hotels() CASCADE;
+DROP FUNCTION IF EXISTS require_manager_role() CASCADE;
+DROP FUNCTION IF EXISTS ensure_hotel_has_manager() CASCADE;
+DROP FUNCTION IF EXISTS refresh_room_current_availability(text, text, text, integer) CASCADE;
+DROP FUNCTION IF EXISTS refresh_all_room_current_availability() CASCADE;
+DROP FUNCTION IF EXISTS sync_room_current_availability_trigger() CASCADE;
+DROP FUNCTION IF EXISTS ensure_room_time_window_available() CASCADE;
+DROP FUNCTION IF EXISTS archive_booking_before_delete() CASCADE;
+DROP FUNCTION IF EXISTS archive_renting_before_delete() CASCADE;
+DROP FUNCTION IF EXISTS create_hotel_with_manager(text, text, text, integer, text, text, text, text) CASCADE;
+DROP FUNCTION IF EXISTS create_booking(date, date, integer, text, text, text, text, text, text) CASCADE;
+DROP FUNCTION IF EXISTS create_renting(date, date, integer, text, text, text, text, text, text, boolean, numeric, text) CASCADE;
+DROP FUNCTION IF EXISTS convert_booking_to_renting(bigint, text, boolean, numeric, text) CASCADE;
+DROP FUNCTION IF EXISTS record_payment(bigint, numeric, text) CASCADE;
+DROP FUNCTION IF EXISTS search_available_rooms(date, date, integer, text, text, integer, integer, numeric) CASCADE;
